@@ -30,7 +30,9 @@ scrubber seek.
 
 **Actual Result**
 The lesson is marked `COMPLETE` — the tracking logic only checks whether the player's current
-timestamp ever reached the video's end, regardless of how it got there.
+timestamp ever reached the video's end, regardless of how it got there. See
+[`docs/architecture-and-flow.md`](./docs/architecture-and-flow.md) section 3 for this exact
+mechanism shown as a flowchart.
 
 **Impact**
 Undermines the platform's core trust guarantee that "Completed" means genuine engagement — a
@@ -65,7 +67,9 @@ complete — a raw "reached end-of-video timestamp" check is not sufficient.
 **Actual Result**
 The reported score is 100% — the grading engine calculates the percentage against only the
 *answered* questions (9/9) rather than the total question count (9/10), inflating the score and
-incorrectly granting certification eligibility to a learner who left a question unanswered.
+incorrectly granting certification eligibility to a learner who left a question unanswered. See
+[`docs/architecture-and-flow.md`](./docs/architecture-and-flow.md) section 5 for this exact
+mechanism, including why it can ship unnoticed for scores far from the Mastery Score threshold.
 
 **Impact**
 Certificates can be issued based on an inflated score — a direct correctness and credential-trust

@@ -15,7 +15,9 @@
 ## 2. Content Consumption & Progress Tracking (Highest Priority)
 
 > Derived from [`docs/architecture-and-flow.md`](./docs/architecture-and-flow.md) — genuine
-> engagement, not just "reached the end," must drive completion.
+> engagement, not just "reached the end," must drive completion. See that doc's section 3 for
+> this guarantee shown as a flowchart, including the checkpoint-vs-position mechanism behind
+> `BUG-LMS-4015` in [`sample-defect-report.md`](./sample-defect-report.md).
 
 | ID | Scenario | Steps | Expected Result |
 |---|---|---|---|
