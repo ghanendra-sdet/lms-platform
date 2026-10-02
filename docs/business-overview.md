@@ -11,15 +11,24 @@ content (video, reading material, SCORM packages), take assessments, and earn a 
 successful completion — while giving instructors and admins the tools to author courses and track
 learner progress at scale.
 
-## 2. Core Modules
+## 2. Core Modules and Their Submodules
 
-- **Course Catalog & Enrollment** — browsing, searching, and enrolling in courses
-- **Content Delivery** — video lessons, reading materials, and SCORM/xAPI-packaged content
-- **Assessments & Quizzes** — auto-graded and manually-graded knowledge checks
-- **Progress Tracking & Grading** — per-learner completion percentage and assessment scores
-- **Certification** — issued once completion criteria (content consumption + passing score) are met
-- **Discussion / Forums** — course-scoped learner-instructor and learner-learner discussion
-- **Instructor/Admin Course Authoring** — building and publishing course content and assessments
+| Module | Submodules / Key Components | Responsible For | Primarily Tested Via |
+|---|---|---|---|
+| **Course Catalog & Enrollment** | Catalog Browse/Search · Enrollment · Duplicate-Enrollment Prevention | Browsing, searching, and enrolling in courses | UI Automation |
+| **Content Delivery** | Video Streaming · Reading Material Rendering · SCORM/xAPI Package Interpretation | Serving lesson content and emitting consumption events as the learner progresses through it | UI Automation + Cross-Package Consistency Testing |
+| **Progress Tracking** | Checkpoint Event Ingestion · Completion-Criteria Evaluation | The authoritative record of genuine engagement — see [`architecture-and-flow.md`](./architecture-and-flow.md) sections 2–3 for why this has to be checkpoint-based, not position-based | API Testing + Negative Testing |
+| **Assessments & Quizzes** | Auto-Grading Engine · Manual Grading Queue · Score Calculation | Auto-graded and manually-graded knowledge checks — see [`architecture-and-flow.md`](./architecture-and-flow.md) section 5 for the scoring-denominator pitfall | API Testing |
+| **Certification** | Dual-Gate Evaluation (content + score) · Certificate Issuance | Issued once completion criteria (content consumption + passing score) are independently met — never inferred from one gate alone | API Testing + Functional Testing |
+| **Discussion / Forums** | Course-Scoped Visibility | Learner-instructor and learner-learner discussion, scoped strictly to the enrolling course | Functional Testing |
+| **Instructor/Admin Course Authoring** | Course/Assessment Authoring · Publishing Workflow | Building and publishing course content and assessments | Functional Testing (Admin) |
+
+**Why Progress Tracking and Assessments are listed as separate modules even though both feed
+Certification:** per section 4 below, false completion and grading inaccuracy are two
+*independent* risk categories with different root causes (an engagement-tracking gap vs. a
+scoring-calculation gap) — collapsing them into one "completion" module would hide that a fix for
+one says nothing about the other, which is exactly what Defects #1 and #2 in
+[`sample-defect-report.md`](../sample-defect-report.md) each demonstrate on their own.
 
 ## 3. Core Flow
 
@@ -83,6 +92,8 @@ what the UI displays.
 | **Completion Criteria** | The defined rule(s) determining when a course counts as complete (e.g. 100% content viewed + passing quiz score) |
 | **Mastery Score** | The minimum score required to pass an assessment |
 | **Enrollment** | The process of a learner joining a course |
+| **Checkpoint Event** | A discrete signal emitted during genuine forward playback (e.g., "25% watched") — the unit Progress Tracking actually verifies, instead of trusting a single current-position value a seek can set directly |
+| **Actor-Verb-Object Statement** | xAPI's granular activity-record shape (e.g., "Learner *experienced* Segment-3-of-5") — the model that makes fine-grained checkpoint tracking possible, unlike SCORM's coarser course-level completion signal |
 
 ## 8. Cross-Module Dependencies
 
