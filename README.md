@@ -29,9 +29,12 @@
 9. [Screenshots & Reports](#-screenshots--reports)
 10. [Repository Structure](#-repository-structure)
 
-> Deeper dives not covered inline in this README: [Stakeholders & Dependencies](./docs/business-overview.md),
-> [Architecture & Flow](./docs/architecture-and-flow.md), [UI Consistency](./docs/ui-consistency.md)
-> — see [`docs/README.md`](./docs/README.md) for the full map.
+> Deeper dives not covered inline in this README: [Modules, Submodules & Stakeholders](./docs/business-overview.md),
+> [Architecture, Flow & Real Sequence Diagrams](./docs/architecture-and-flow.md),
+> [Full Tech Stack & Skills Demonstrated](./docs/tech-and-skills.md), [UI Consistency](./docs/ui-consistency.md)
+> — see [`docs/README.md`](./docs/README.md) for the full map. **Every diagram in this repo is
+> drawn in Mermaid and renders natively right here on GitHub — nothing requires visiting another
+> site.**
 
 ---
 
@@ -81,10 +84,14 @@ across content-consumption tracking, assessment grading, and certification integ
 |---|---|
 | **UI Automation** | Playwright, TypeScript |
 | **BDD Framework** | Cucumber |
-| **API Testing** | Postman |
+| **API Testing & Automation** | Postman |
+| **Performance Testing** | k6 (concurrent content-streaming & checkpoint-ingestion load around deadline-driven spikes) |
 | **CI/CD** | Jenkins / GitHub Actions |
-| **Bug Tracking** | JIRA |
+| **Bug Tracking & Traceability** | JIRA, RTM (Requirement Traceability Matrix — see [`sample-rtm.md`](./sample-rtm.md)) |
 | **Version Control** | Git, GitHub |
+
+> Full detail on *why* each tool was chosen, a skill → proof map, and the performance testing
+> approach in depth: [`docs/tech-and-skills.md`](./docs/tech-and-skills.md).
 
 ---
 
@@ -96,6 +103,9 @@ across content-consumption tracking, assessment grading, and certification integ
 - **Negative Testing** — seek-without-watching, unanswered-question scoring, failed-assessment
   certification blocking
 - **Cross-Content-Package Consistency Testing** — SCORM/xAPI package variability
+- **Performance Testing** — concurrent content-streaming and checkpoint-ingestion load around
+  deadline-driven spikes, validated with k6 (see
+  [`docs/tech-and-skills.md`](./docs/tech-and-skills.md) section 5)
 - **Cross-Browser Testing**
 - **Smoke & Sanity Testing** — post-deployment health checks
 
@@ -103,33 +113,24 @@ across content-consumption tracking, assessment grading, and certification integ
 
 ## 🔄 How It Works — Course Completion Flow
 
-```
-Enrollment (learner enrolls in a course from the Catalog)
-      │
-      ▼
-Content Consumption (video / reading / SCORM lessons)
-      │
-      ├──▶ Genuine playback through required checkpoints ──▶ Lesson COMPLETE
-      │
-      └──▶ Seek/skip past checkpoints without consuming them ──▶ Lesson remains IN PROGRESS
-      │
-      ▼
-Assessment (auto-graded quiz or manually-graded assignment)
-      │
-      ▼
-Certification Gate — BOTH must be true:
-   ┌─────────────────────────┐   ┌──────────────────────────┐
-   │ Content fully consumed   │ + │ Passing (Mastery) score   │
-   └─────────────────────────┘   └──────────────────────────┘
-      │
-      ▼
-Certificate issued only when both gates are independently satisfied
+```mermaid
+flowchart TD
+    A["Enrollment<br/>learner enrolls in a course from the Catalog"] --> B["Content Consumption<br/>video / reading / SCORM lessons"]
+    B -->|Genuine playback through required checkpoints| C["Lesson COMPLETE"]
+    B -->|Seek/skip past checkpoints without consuming them| B1["Lesson remains IN PROGRESS"]
+    C --> D["Assessment<br/>auto-graded quiz or manually-graded assignment"]
+    D --> E{"Certification Gate — BOTH required:<br/>content fully consumed AND passing score"}
+    E -->|Both satisfied| F["Certificate issued"]
+    E -->|Either gate unmet| G["Course remains incomplete —<br/>learner sees exactly what's outstanding"]
 ```
 
 **Key testing principle:** content-consumption completion and passing-score completion are two
 independent gates — a certificate must never be issued on partial satisfaction of either one, and
 "reached the end of a video" must never be treated as equivalent to "watched the video." See
-[`docs/business-overview.md`](./docs/business-overview.md) section 4 for the full rationale.
+[`docs/business-overview.md`](./docs/business-overview.md) section 4 for the full rationale and
+[`docs/architecture-and-flow.md`](./docs/architecture-and-flow.md) for the full set of sequence
+diagrams, including exactly how a false-completion or scoring defect actually happens under the
+hood.
 
 ### Admin Functions
 
@@ -156,7 +157,9 @@ independent gates — a certificate must never be issued on partial satisfaction
 ## 🤖 Automation Approach
 
 Automation is built with **Playwright + TypeScript**, using **Cucumber (BDD)** for scenario
-definition, covering the enrollment-to-certification journey.
+definition, covering the enrollment-to-certification journey, backed by Postman API coverage and
+k6 for concurrent-streaming performance testing (see
+[`docs/tech-and-skills.md`](./docs/tech-and-skills.md) section 5).
 
 ### Priority Automated Scenarios
 
@@ -165,6 +168,7 @@ definition, covering the enrollment-to-certification journey.
 3. Auto-graded quiz scoring accuracy
 4. Certification issued only when both content and assessment gates are met
 5. Cross-content-package consistency checks
+6. Concurrent content-streaming / checkpoint-ingestion load testing (k6)
 
 See [`automation/`](./automation) for the framework README and a sample feature file + step
 definitions using dummy data.
@@ -186,9 +190,9 @@ Full checklist with edge cases available in [`regression-checklist.md`](./regres
 
 ## 📸 Screenshots & Reports
 
-Sample test execution reports and defect report templates are available in
-[`regression-execution-summary.md`](./regression-execution-summary.md) and
-[`sample-defect-report.md`](./sample-defect-report.md).
+Sample test execution reports, defect report templates, and a worked Requirement Traceability
+Matrix are available in [`regression-execution-summary.md`](./regression-execution-summary.md),
+[`sample-defect-report.md`](./sample-defect-report.md), and [`sample-rtm.md`](./sample-rtm.md).
 
 ---
 
@@ -203,11 +207,14 @@ lms-platform/
 ├── README.md
 ├── regression-checklist.md          → Full regression suite + edge cases
 ├── sample-defect-report.md          → Defect theme taxonomy + worked defect examples
+├── sample-rtm.md                    → Worked Requirement Traceability Matrix, including real coverage gaps
 ├── regression-execution-summary.md  → Sample regression test execution report
 ├── docs/
 │   ├── README.md                    → 📍 Documentation map — start here
-│   ├── business-overview.md         → What this is, stakeholders, dependencies, glossary, completion-integrity risk model
-│   ├── architecture-and-flow.md     → Content-consumption + assessment/certification flow diagrams
+│   ├── business-overview.md         → What this is, modules/submodules, glossary, completion-integrity risk model
+│   ├── architecture-and-flow.md     → Real Mermaid sequence/flow diagrams: checkpoint tracking, the
+│   │                                    Defect #1/#2 mechanisms, assessment/certification flow
+│   ├── tech-and-skills.md           → Full tech stack (with why), skill → proof map, CI/CD shape, performance depth
 │   └── ui-consistency.md            → Cross-screen UI/UX consistency (completion status, progress %, a11y)
 └── automation/
     ├── README.md                          → Framework setup & structure
