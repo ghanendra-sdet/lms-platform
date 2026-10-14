@@ -5,18 +5,26 @@
  * accounts.
  */
 
-import { Given, When, Then } from '@cucumber/cucumber';
-import { expect, Page } from '@playwright/test';
+import { Given, When, Then, Before, After } from '@cucumber/cucumber';
+import { chromium, expect, Browser, Page } from '@playwright/test';
 
+let browser: Browser;
 let page: Page;
-let currentLessonId: string;
+
+Before(async () => {
+  browser = await chromium.launch();
+  page = await browser.newPage();
+});
+
+After(async () => {
+  await browser.close();
+});
 
 Given('a dummy learner {string} is enrolled in course {string}', async (email: string, courseId: string) => {
   await page.goto(`/courses/${courseId}?enrollAs=${encodeURIComponent(email)}`);
 });
 
 Given('the course has a video lesson {string} with required playback checkpoints', async (lessonName: string) => {
-  currentLessonId = lessonName;
   await page.goto(`/lessons/${encodeURIComponent(lessonName)}`);
 });
 

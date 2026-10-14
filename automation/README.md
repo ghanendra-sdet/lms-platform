@@ -8,18 +8,17 @@
 > [`../docs/tech-and-skills.md`](../docs/tech-and-skills.md) section 5 for the full performance
 > testing approach for this domain.
 
-Automation for the enrollment-to-certification journey, built with **Playwright + TypeScript**,
-using **Cucumber (BDD)** for scenario definition.
+Automation for the enrollment-to-certification journey, built with **Playwright + TypeScript** and
+**Cucumber (BDD)** for scenario definition.
 
 ## Why Playwright + Cucumber (BDD)
 
-- BDD-style feature files make the completion-integrity scenarios (e.g. "seeking to the end
-  should NOT mark a lesson complete" — see
-  [`../docs/architecture-and-flow.md`](../docs/architecture-and-flow.md)) readable as plain
-  business rules, which matters here since these rules are exactly what a non-QA stakeholder
-  (an L&D/Compliance reviewer) needs to verify independently
-- Playwright's video-player interaction APIs make it practical to simulate both genuine playback
-  and seek-only interaction as distinct, repeatable test scenarios
+- Feature files written in plain language make the completion-integrity rules — "seeking to the
+  end should NOT mark a lesson complete," for example (see
+  [`../docs/architecture-and-flow.md`](../docs/architecture-and-flow.md)) — readable as business
+  rules a non-QA stakeholder, an L&D or Compliance reviewer, can verify independently
+- Playwright's video-player interaction APIs make genuine playback and seek-only interaction
+  practical to simulate as distinct, repeatable scenarios
 
 ## Suggested Project Structure
 
@@ -41,21 +40,21 @@ automation/
     └── concurrent-streaming-load.js   ← concurrent content-streaming & checkpoint-ingestion load
 ```
 
-> This repo currently includes one representative sample at the root of this folder
-> (`sample-progress-tracking.feature` + `sample-progress-tracking.steps.ts`) rather than the full
-> framework structure shown above, to keep the portfolio focused.
+> This repo currently includes one representative sample, sitting at the root of this folder
+> (`sample-progress-tracking.feature` + `sample-progress-tracking.steps.ts`), rather than the full
+> structure shown above — kept this way to stay focused as a portfolio piece.
 
 ## Test Data Policy
 
-All automation uses **dummy data only**: dummy courses, dummy learner accounts, and dummy
-video/SCORM content — never real course material or real learner records.
+All automation uses dummy data only: dummy courses, dummy learner accounts, and dummy
+video/SCORM content. Never real course material or real learner records.
 
 ## Priority Automated Scenarios
 
 1. Enrollment happy path
-2. Video-watched-fully marks lesson complete; seek-to-end does not
+2. Watching a video fully marks the lesson complete; seeking to the end does not
 3. Auto-graded quiz scoring accuracy
-4. Certification issued only when both content and assessment gates are met
+4. Certification issued only when both the content and assessment gates are met
 5. Cross-content-package consistency checks
 6. Concurrent content-streaming / checkpoint-ingestion load testing (k6 — see
    [`../docs/tech-and-skills.md`](../docs/tech-and-skills.md) section 5)
