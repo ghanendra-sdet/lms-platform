@@ -1,7 +1,7 @@
 # Sample Defect Report — LMS Platform
 
 > Template + worked examples using dummy data. Reflects the progress/completion-integrity defect
-> theme that is the primary risk area for this module — see
+> theme that's the primary risk area for this module — see
 > [`docs/business-overview.md`](./docs/business-overview.md) section 4 for why, and
 > [`docs/README.md`](./docs/README.md) for the full documentation map.
 
@@ -19,20 +19,20 @@
 
 **Steps to Reproduce**
 1. Open a dummy video lesson with a defined completion checkpoint requirement
-2. Seek the video player's scrubber directly to the final few seconds without playing through
-   the rest
+2. Seek the video player's scrubber directly to the final few seconds without playing through the
+   rest
 3. Let the video reach its end
 
 **Expected Result**
 Per [`docs/architecture-and-flow.md`](./docs/architecture-and-flow.md), completion requires
-genuine engagement — required checkpoints must be *hit through playback*, not just reached via a
+genuine engagement — required checkpoints have to be hit through playback, not just reached via a
 scrubber seek.
 
 **Actual Result**
-The lesson is marked `COMPLETE` — the tracking logic only checks whether the player's current
+The lesson is marked `COMPLETE`. The tracking logic only checks whether the player's current
 timestamp ever reached the video's end, regardless of how it got there. See
-[`docs/architecture-and-flow.md`](./docs/architecture-and-flow.md) section 3 for this exact
-mechanism shown as a flowchart.
+[`docs/architecture-and-flow.md`](./docs/architecture-and-flow.md) section 3 for this mechanism
+shown as a flowchart.
 
 **Impact**
 Undermines the platform's core trust guarantee that "Completed" means genuine engagement — a
@@ -40,9 +40,9 @@ learner (or their employer's compliance record, for mandatory training) can appe
 completed content they never actually watched.
 
 **Suggested Fix**
-Track playback checkpoints as events that must be emitted during forward playback (not via seek),
-and require a minimum set of in-order checkpoints to be satisfied before marking a lesson
-complete — a raw "reached end-of-video timestamp" check is not sufficient.
+Track playback checkpoints as events that must be emitted during forward playback, not via seek,
+and require a minimum set of in-order checkpoints before marking a lesson complete. A raw
+"reached end-of-video timestamp" check isn't sufficient on its own.
 
 ---
 
@@ -62,23 +62,23 @@ complete — a raw "reached end-of-video timestamp" check is not sufficient.
 3. Submit the quiz and check the reported score
 
 **Expected Result**
-9 correct out of 10 total questions should score 90%, well above the 70% Mastery Score.
+9 correct out of 10 total questions should score 90%, comfortably above the 70% Mastery Score.
 
 **Actual Result**
-The reported score is 100% — the grading engine calculates the percentage against only the
-*answered* questions (9/9) rather than the total question count (9/10), inflating the score and
-incorrectly granting certification eligibility to a learner who left a question unanswered. See
-[`docs/architecture-and-flow.md`](./docs/architecture-and-flow.md) section 5 for this exact
+The reported score comes back as 100%. The grading engine calculates the percentage against only
+the *answered* questions (9/9) rather than the total question count (9/10), inflating the score
+and incorrectly granting certification eligibility to a learner who left a question unanswered.
+See [`docs/architecture-and-flow.md`](./docs/architecture-and-flow.md) section 5 for this exact
 mechanism, including why it can ship unnoticed for scores far from the Mastery Score threshold.
 
 **Impact**
-Certificates can be issued based on an inflated score — a direct correctness and credential-trust
-issue, since it lets a learner receive credit for material they never actually demonstrated
-knowledge of.
+Certificates can be issued on an inflated score — a direct correctness and credential-trust issue,
+since it lets a learner receive credit for material they never actually demonstrated knowledge of.
 
 **Suggested Fix**
-Calculate the score as correct-answers ÷ total-questions-in-the-quiz, treating an unanswered
-question as incorrect for scoring purposes, not silently excluding it from the denominator.
+Calculate the score as correct answers divided by total questions in the quiz, treating an
+unanswered question as incorrect for scoring purposes rather than silently excluding it from the
+denominator.
 
 ---
 

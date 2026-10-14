@@ -7,11 +7,11 @@
 | Metric | Value |
 |---|---|
 | Test Cycle | Sample Release Regression |
-| Total Test Cases Executed | 41 |
-| Passed | 37 |
+| Total Test Cases Executed | 17 |
+| Passed | 14 |
 | Failed | 3 |
-| Blocked | 1 |
-| Pass Rate | 90.2% |
+| Blocked | 0 |
+| Pass Rate | 82.4% |
 
 ## Results by Area
 
@@ -21,7 +21,7 @@
 | **Content Consumption & Progress Tracking** | 5 | 3 | 2 | **Critical**: seek-to-end false-completion defect found (see `sample-defect-report.md`) |
 | Assessment & Certification | 5 | 4 | 1 | Quiz scoring-denominator defect found (see `sample-defect-report.md`) |
 | Discussion / Forums | 1 | 1 | 0 | — |
-| UI Consistency | 4 | 4 | 0 | 1 blocked — second SCORM content package not seeded in this cycle |
+| UI Consistency | 4 | 4 | 0 | — |
 
 ## Defect Summary
 
@@ -32,12 +32,12 @@
 
 ## Conclusion
 
-The regression cycle's most valuable findings were in Content Consumption & Progress Tracking and
-Assessment & Certification — exactly where this module's QA strategy places the most weight per
-[`docs/business-overview.md`](./docs/business-overview.md) section 4. Both a false-completion
-defect and a grading-accuracy defect were caught before release, directly validating why
-completion integrity is tested against underlying tracking/scoring data rather than the progress
-bar alone.
+The most valuable findings this cycle came out of Content Consumption & Progress Tracking and
+Assessment & Certification — exactly where this module's QA strategy places the most weight, per
+[`docs/business-overview.md`](./docs/business-overview.md) section 4. A false-completion defect and
+a grading-accuracy defect were both caught before release, which is the clearest possible
+validation for testing completion integrity against the underlying tracking and scoring data
+rather than trusting the progress bar alone.
 
 **See also:** [`docs/business-overview.md`](./docs/business-overview.md) section 4 for the
 progress/completion-integrity framing behind this test structure, and
