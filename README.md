@@ -2,17 +2,17 @@
 
 **A Learning Management System (course delivery, assessments & certification) — QA & Automation Portfolio Project**
 
-> This repository documents the QA strategy, test automation, and testing approach applied to a
-> sample **Learning Management System (LMS)** that lets learners enroll in courses, consume
-> content (video/reading/SCORM), take assessments, and earn certificates.
+> This repository documents the QA strategy, test automation, and testing approach behind a
+> sample **Learning Management System (LMS)** — a platform where learners enroll in courses,
+> work through content (video, reading, SCORM), sit assessments, and earn certificates.
 >
 > All content here uses **generic/sample data only**. No client names, company names, or
-> confidential/production information are included. Dates and timelines are placeholders —
+> confidential/production information appear anywhere. Dates and timelines are placeholders —
 > update `[Timeline]` before publishing.
 >
-> 📍 **New here?** [`docs/README.md`](./docs/README.md) is a documentation map answering "what is
-> this, how does it work, who's involved, what does it depend on" — with a recommended reading
-> order through every doc in this repo.
+> 📍 **New here?** [`docs/README.md`](./docs/README.md) is a documentation map — it answers what
+> this is, how it works, who's involved, and what it depends on, with a suggested reading order
+> through the rest of the repo.
 
 ---
 
@@ -29,32 +29,30 @@
 9. [Screenshots & Reports](#-screenshots--reports)
 10. [Repository Structure](#-repository-structure)
 
-> Deeper dives not covered inline in this README: [Modules, Submodules & Stakeholders](./docs/business-overview.md),
-> [Architecture, Flow & Real Sequence Diagrams](./docs/architecture-and-flow.md),
-> [Full Tech Stack & Skills Demonstrated](./docs/tech-and-skills.md), [UI Consistency](./docs/ui-consistency.md)
-> — see [`docs/README.md`](./docs/README.md) for the full map. **Every diagram in this repo is
-> drawn in Mermaid and renders natively right here on GitHub — nothing requires visiting another
-> site.**
+> For deeper dives not covered inline here: [Modules, Submodules & Stakeholders](./docs/business-overview.md),
+> [Architecture, Flow & Sequence Diagrams](./docs/architecture-and-flow.md),
+> [Tech Stack & Skills Demonstrated](./docs/tech-and-skills.md), [UI Consistency](./docs/ui-consistency.md)
+> — or see [`docs/README.md`](./docs/README.md) for the full map. Every diagram in this repo is
+> drawn in Mermaid and renders directly on GitHub, so there's nothing to open elsewhere.
 
 ---
 
 ## 💡 What is an LMS?
 
-A **Learning Management System (LMS)** lets learners browse a course catalog, enroll, consume
-course content (video, reading material, SCORM/xAPI packages), take assessments, and earn a
-certificate on successful completion.
+A Learning Management System lets learners browse a course catalog, enroll, work through content
+— video, reading material, SCORM or xAPI packages — sit assessments, and earn a certificate once
+they've finished.
 
-If you're new to ed-tech QA, HR, or any non-technical role: think of it as a school built into
-software — the core testing challenge is that **a certificate is a credential**, so the platform
-must be able to prove a learner genuinely engaged with the material and passed the required
-assessment, not just that a progress bar visually reached 100%.
+For anyone new to ed-tech QA: a certificate is a credential. The platform has to be able to prove
+a learner genuinely engaged with the material and passed the assessment, not just that a progress
+bar reached 100%. That distinction drives almost everything in this repo's test design.
 
 ### Who typically interacts with it?
 
 | Role | What they do |
 |---|---|
-| **Learner / Student** | Enrolls, consumes content, takes assessments, earns certificates |
-| **Instructor** | Authors courses/assessments, monitors progress, grades manual assignments |
+| **Learner / Student** | Enrolls, works through content, sits assessments, earns certificates |
+| **Instructor** | Authors courses and assessments, monitors progress, grades manual assignments |
 | **Course Admin** | Manages catalog structure and publishing/enrollment rules |
 | **Platform Admin** | Manages platform-wide configuration and system health |
 
@@ -62,16 +60,16 @@ assessment, not just that a progress bar visually reached 100%.
 
 ## 👤 My Role
 
-QA Engineer / SDET responsible for the LMS module, owning manual and automated test coverage
-across content-consumption tracking, assessment grading, and certification integrity.
+QA Engineer / SDET for the LMS module, owning manual and automated coverage across
+content-consumption tracking, assessment grading, and certification integrity.
 
-- Owned QA strategy for the enrollment → content consumption → assessment → certification journey
+- Owned QA strategy for the full journey: enrollment, content consumption, assessment,
+  certification
 - Designed and executed automation covering progress-tracking correctness, including
   seek-vs-genuine-playback scenarios
-- Performed **API testing** validating assessment scoring calculations and completion-criteria
-  gating logic
-- Focused test design on **progress & completion integrity** — the single highest-severity risk
-  category for a platform whose output is a credential
+- Ran API testing against assessment scoring calculations and completion-criteria gating logic
+- Focused test design on progress and completion integrity, the highest-severity risk category for
+  a platform whose end product is a credential
 - Logged, triaged, and tracked defects through their full lifecycle
 
 **Timeline:** `[Add Duration]`
@@ -85,27 +83,27 @@ across content-consumption tracking, assessment grading, and certification integ
 | **UI Automation** | Playwright, TypeScript |
 | **BDD Framework** | Cucumber |
 | **API Testing & Automation** | Postman |
-| **Performance Testing** | k6 (concurrent content-streaming & checkpoint-ingestion load around deadline-driven spikes) |
+| **Performance Testing** | k6 (concurrent content-streaming and checkpoint-ingestion load around deadline-driven spikes) |
 | **CI/CD** | Jenkins / GitHub Actions |
 | **Bug Tracking & Traceability** | JIRA, RTM (Requirement Traceability Matrix — see [`sample-rtm.md`](./sample-rtm.md)) |
 | **Version Control** | Git, GitHub |
 
-> Full detail on *why* each tool was chosen, a skill → proof map, and the performance testing
-> approach in depth: [`docs/tech-and-skills.md`](./docs/tech-and-skills.md).
+> For why each tool was chosen, a skill-to-proof map, and the performance testing approach in
+> full: [`docs/tech-and-skills.md`](./docs/tech-and-skills.md).
 
 ---
 
 ## 🧪 Types of Testing Performed
 
 - **Functional Testing** — enrollment, content consumption, assessments, certification
-- **Regression Testing** — full enrollment-to-certification suite run before every release
+- **Regression Testing** — the full enrollment-to-certification suite, run before every release
 - **API Testing** — progress-tracking events, assessment scoring, certification-eligibility checks
-- **Negative Testing** — seek-without-watching, unanswered-question scoring, failed-assessment
-  certification blocking
+- **Negative Testing** — seek-without-watching, unanswered-question scoring, blocking
+  certification on a failed assessment
 - **Cross-Content-Package Consistency Testing** — SCORM/xAPI package variability
 - **Performance Testing** — concurrent content-streaming and checkpoint-ingestion load around
-  deadline-driven spikes, validated with k6 (see
-  [`docs/tech-and-skills.md`](./docs/tech-and-skills.md) section 5)
+  deadline-driven spikes, run with k6 (see [`docs/tech-and-skills.md`](./docs/tech-and-skills.md)
+  section 5)
 - **Cross-Browser Testing**
 - **Smoke & Sanity Testing** — post-deployment health checks
 
@@ -115,22 +113,29 @@ across content-consumption tracking, assessment grading, and certification integ
 
 ```mermaid
 flowchart TD
-    A["Enrollment<br/>learner enrolls in a course from the Catalog"] --> B["Content Consumption<br/>video / reading / SCORM lessons"]
-    B -->|Genuine playback through required checkpoints| C["Lesson COMPLETE"]
-    B -->|Seek/skip past checkpoints without consuming them| B1["Lesson remains IN PROGRESS"]
-    C --> D["Assessment<br/>auto-graded quiz or manually-graded assignment"]
-    D --> E{"Certification Gate — BOTH required:<br/>content fully consumed AND passing score"}
-    E -->|Both satisfied| F["Certificate issued"]
-    E -->|Either gate unmet| G["Course remains incomplete —<br/>learner sees exactly what's outstanding"]
+    A["📚 Enrollment<br/>learner enrolls in a course from the Catalog"] --> B["🎬 Content Consumption<br/>video / reading / SCORM lessons"]
+    B -->|"Genuine playback through required checkpoints"| C["✅ Lesson COMPLETE"]
+    B -->|"Seek/skip past checkpoints without consuming them"| B1["⏳ Lesson remains IN PROGRESS"]
+    C --> D["📝 Assessment<br/>auto-graded quiz or manually-graded assignment"]
+    D --> E{"🎓 Certification Gate<br/>BOTH required: content fully consumed AND passing score"}
+    E -->|"Both satisfied"| F["🏆 Certificate issued"]
+    E -->|"Either gate unmet"| G["Course remains incomplete<br/>learner sees exactly what's outstanding"]
+
+    classDef complete fill:#1b5e20,stroke:#43a047,color:#fff
+    classDef pending fill:#e65100,stroke:#fb8c00,color:#fff
+    classDef gate fill:#4a148c,stroke:#8e24aa,color:#fff
+    classDef cert fill:#0d47a1,stroke:#1e88e5,color:#fff
+    class C complete
+    class B1,G pending
+    class E gate
+    class F cert
 ```
 
-**Key testing principle:** content-consumption completion and passing-score completion are two
-independent gates — a certificate must never be issued on partial satisfaction of either one, and
-"reached the end of a video" must never be treated as equivalent to "watched the video." See
-[`docs/business-overview.md`](./docs/business-overview.md) section 4 for the full rationale and
-[`docs/architecture-and-flow.md`](./docs/architecture-and-flow.md) for the full set of sequence
-diagrams, including exactly how a false-completion or scoring defect actually happens under the
-hood.
+Content-consumption completion and passing-score completion are independent gates. A certificate
+should never be issued on partial satisfaction of either one, and "reached the end of a video"
+should never be treated as equivalent to "watched the video." [`docs/business-overview.md`](./docs/business-overview.md)
+section 4 has the full rationale; [`docs/architecture-and-flow.md`](./docs/architecture-and-flow.md)
+walks through how a false-completion or scoring defect actually happens under the hood.
 
 ### Admin Functions
 
@@ -142,36 +147,36 @@ hood.
 
 ## 🏆 Key Achievements
 
-- Designed a progress-tracking-focused regression suite treating false completion (seek vs.
-  genuine playback) as a first-class, highest-priority test scenario — catching a critical defect
-  where seeking to a video's end falsely marked it complete (see
-  [`sample-defect-report.md`](./sample-defect-report.md) Defect #1)
-- Validated assessment scoring accuracy, catching a scoring-denominator defect that inflated
-  scores when a question was left unanswered
+- Built a progress-tracking regression suite that treats false completion (seek vs. genuine
+  playback) as a first-priority scenario — caught a critical defect where seeking to a video's end
+  falsely marked it complete (see [`sample-defect-report.md`](./sample-defect-report.md) Defect #1)
+- Validated assessment scoring accuracy and caught a scoring-denominator defect that inflated
+  scores whenever a question was left unanswered
 - Verified cross-content-package consistency, treating SCORM/xAPI authoring-tool variability as
-  its own dedicated test dimension
-- Logged and tracked defects across completion-integrity and grading-accuracy themes
+  its own test dimension rather than an edge case
+- Tracked defects across completion-integrity and grading-accuracy themes through their full
+  lifecycle
 
 ---
 
 ## 🤖 Automation Approach
 
 Automation is built with **Playwright + TypeScript**, using **Cucumber (BDD)** for scenario
-definition, covering the enrollment-to-certification journey, backed by Postman API coverage and
-k6 for concurrent-streaming performance testing (see
+definition, covering the enrollment-to-certification journey and backed by Postman for API
+coverage and k6 for concurrent-streaming performance testing (see
 [`docs/tech-and-skills.md`](./docs/tech-and-skills.md) section 5).
 
 ### Priority Automated Scenarios
 
 1. Enrollment happy path
-2. Video-watched-fully marks lesson complete; seek-to-end does not
+2. Watching a video fully marks the lesson complete; seeking to the end does not
 3. Auto-graded quiz scoring accuracy
-4. Certification issued only when both content and assessment gates are met
+4. Certification issued only when both the content and assessment gates are met
 5. Cross-content-package consistency checks
 6. Concurrent content-streaming / checkpoint-ingestion load testing (k6)
 
-See [`automation/`](./automation) for the framework README and a sample feature file + step
-definitions using dummy data.
+See [`automation/`](./automation) for the framework README and a sample feature file with step
+definitions, built on dummy data.
 
 ---
 
@@ -180,27 +185,26 @@ definitions using dummy data.
 - [ ] Enrollment (single, duplicate prevention)
 - [ ] Content Consumption & Progress Tracking (video, SCORM, cross-package consistency)
 - [ ] Assessment & Grading (auto-graded, manually-graded)
-- [ ] Certification (both gates required, neither gate alone sufficient)
+- [ ] Certification (both gates required, neither alone is sufficient)
 - [ ] Discussion / Forums (course-scoped visibility)
 - [ ] UI Consistency (status labeling, progress percentage, terminology, accessibility)
 
-Full checklist with edge cases available in [`regression-checklist.md`](./regression-checklist.md).
+Full checklist with edge cases: [`regression-checklist.md`](./regression-checklist.md).
 
 ---
 
 ## 📸 Screenshots & Reports
 
 Sample test execution reports, defect report templates, and a worked Requirement Traceability
-Matrix are available in [`regression-execution-summary.md`](./regression-execution-summary.md),
+Matrix live in [`regression-execution-summary.md`](./regression-execution-summary.md),
 [`sample-defect-report.md`](./sample-defect-report.md), and [`sample-rtm.md`](./sample-rtm.md).
 
 ---
 
 ## 📁 Repository Structure
 
-> **New here?** Start with [`docs/README.md`](./docs/README.md) — a documentation map that
-> answers "what is this, how does it work, who's involved, what does it depend on" and points to
-> exactly the right doc for each question.
+> **New here?** Start with [`docs/README.md`](./docs/README.md) — a documentation map that points
+> to exactly the right doc for each question you're likely to have.
 
 ```
 lms-platform/
@@ -212,7 +216,7 @@ lms-platform/
 ├── docs/
 │   ├── README.md                    → 📍 Documentation map — start here
 │   ├── business-overview.md         → What this is, modules/submodules, glossary, completion-integrity risk model
-│   ├── architecture-and-flow.md     → Real Mermaid sequence/flow diagrams: checkpoint tracking, the
+│   ├── architecture-and-flow.md     → Mermaid sequence/flow diagrams: checkpoint tracking, the
 │   │                                    Defect #1/#2 mechanisms, assessment/certification flow
 │   ├── tech-and-skills.md           → Full tech stack (with why), skill → proof map, CI/CD shape, performance depth
 │   └── ui-consistency.md            → Cross-screen UI/UX consistency (completion status, progress %, a11y)
@@ -222,7 +226,7 @@ lms-platform/
     └── sample-progress-tracking.steps.ts  → Sample Playwright + TypeScript step definitions
 ```
 
-> **Note on structure:** `bug-reports/`, `test-cases/`, and `test-reports/` were originally empty
-> placeholder folders — flattened away entirely once real content was added, since a folder
-> holding exactly one file (or none) adds navigation overhead without organizing anything. `docs/`
-> and `automation/` remain folders because each genuinely groups multiple related files.
+> **Note on structure:** `bug-reports/`, `test-cases/`, and `test-reports/` started as empty
+> placeholder folders and were flattened away once real content existed — a folder holding one
+> file (or none) adds navigation overhead without organizing anything. `docs/` and `automation/`
+> stayed as folders because each genuinely groups several related files.
