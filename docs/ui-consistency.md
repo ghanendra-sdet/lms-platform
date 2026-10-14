@@ -2,16 +2,16 @@
 
 > Progress percentage, completion status, and assessment scores surface across the Course
 > Catalog, the Lesson/Content Player, the Progress Dashboard, and Certification (see
-> [`business-overview.md`](./business-overview.md)). This document covers whether it's
+> [`business-overview.md`](./business-overview.md)). This document checks whether they're
 > represented **consistently** across all of them.
 
 ## Why This Matters More Here Than in Most Modules
 
 Per [`business-overview.md`](./business-overview.md) section 4, this product's central risk is
-false completion and grading inaccuracy — both silent failure modes. A learner (or their
-employer's L&D team, for mandatory training) relies on the progress percentage and completion
-badge as the truth of what's actually been learned. If the Content Player shows 100% while the
-Progress Dashboard shows 80%, neither the learner nor Compliance can tell which is correct.
+false completion and grading inaccuracy — both silent failure modes. A learner, or their
+employer's L&D team for mandatory training, relies on the progress percentage and completion badge
+as the truth of what's actually been learned. If the Content Player shows 100% while the Progress
+Dashboard shows 80%, neither the learner nor Compliance can tell which one is right.
 
 ## 1. Completion Status Representation Consistency
 
@@ -23,30 +23,30 @@ Progress Dashboard shows 80%, neither the learner nor Compliance can tell which 
 | Fully complete (content + passing score) | "Completed" | Green |
 | Certificate issued | "Certified" | Green, distinct badge from "Completed" |
 
-**Test scenario:** "Assessment Pending" must never be shown identically to "Completed" — a
-learner who's watched all the content but hasn't passed the quiz has not finished the course.
+**Test scenario:** "Assessment Pending" should never look identical to "Completed" — a learner
+who's watched all the content but hasn't passed the quiz hasn't finished the course.
 
 ## 2. Progress Percentage Consistency
 
 | Element | Convention to Verify |
 |---|---|
-| Course-level percentage | Must match exactly across Course Catalog card, Course Dashboard, and Progress Dashboard |
-| Lesson-level checkmarks | A lesson marked complete in the player must show as complete everywhere else immediately, not after a delayed refresh |
+| Course-level percentage | Must match exactly across the Course Catalog card, Course Dashboard, and Progress Dashboard |
+| Lesson-level checkmarks | A lesson marked complete in the player should show as complete everywhere else immediately, not after a delayed refresh |
 
 ## 3. Terminology Consistency
 
 Per the glossary in [`business-overview.md`](./business-overview.md), watch for drift on:
 
-- "Complete" vs. "Finished" vs. "Done" used interchangeably for the same lesson/course state
+- "Complete" vs. "Finished" vs. "Done," used interchangeably for the same lesson/course state
 - "Mastery Score" vs. "Passing Score" vs. "Minimum Score" as different labels for the same
   threshold
 - "Certificate" vs. "Credential" vs. "Badge" — pick one primary term for the earned artifact
 
 ## 4. Assessment Score Display Consistency
 
-- The score shown immediately after submitting a quiz must match exactly what's later shown on
-  the Progress Dashboard and any transcript/certificate detail view
-- Pass/fail messaging must be worded identically regardless of which course or quiz triggered it
+- The score shown right after submitting a quiz should match exactly what's later shown on the
+  Progress Dashboard and any transcript/certificate detail view
+- Pass/fail messaging should be worded identically regardless of which course or quiz triggered it
 
 ## 5. Empty States & Error Messages
 
@@ -57,8 +57,8 @@ Per the glossary in [`business-overview.md`](./business-overview.md), watch for 
 
 ## 6. Cross-Browser & Responsive Consistency
 
-- Does the video/content player and progress indicators render identically across Chrome,
-  Firefox, and Safari/WebKit?
+- Does the video/content player, and the progress indicators around it, render identically across
+  Chrome, Firefox, and Safari/WebKit?
 
 ## 7. Accessibility Consistency
 
